@@ -3,7 +3,7 @@ from datetime import datetime
 
 def main():
     skiplines = 1                                   #the number of lines at the start of the line to skip
-    filename = 'c:\c2kbarcode\SDUSD (12-15-22).txt' #the name of the file to process
+    filename = 'SDUSD (12-15-22).txt' #the name of the file to process
     textfile = open(filename,'r')
     # fix up the input lines based on the different barcode formats
     lines = []
@@ -53,20 +53,3 @@ def ParseLine(line):
     raise Exception(line + 'is an unknown format')
 
 main()
-
-        
-
-# style0 = xlwt.easyxf('font: name Times New Roman, color-index red, bold on',
-#     num_format_str='#,##0.00')
-# style1 = xlwt.easyxf(num_format_str='D-MMM-YY')
-
-# wb = xlwt.Workbook()
-# ws = wb.add_sheet('A Test Sheet')
-
-# ws.write(0, 0, 1234.56, style0)
-# ws.write(1, 0, datetime.now(), style1)
-# ws.write(2, 0, 1)
-# ws.write(2, 1, 1)
-# ws.write(2, 2, xlwt.Formula("A3+B3"))
-
-# wb.save('c:\c2kbarcode\example2.xls')
