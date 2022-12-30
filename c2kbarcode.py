@@ -2,8 +2,8 @@ import xlwt
 from datetime import datetime
 
 def main():
-    skiplines = 2                     #the number of lines at the start of the line to skip
-    filename = 'Pallet #3B-SDUSD.txt' #the name of the file to process
+    skiplines = 1                     #the number of lines at the start of the line to skip
+    filename = 'SDUSD 2-of-2 (12-15-22).txt' #the name of the file to process
     textfile = open(filename,'r')
     # fix up the input lines based on the different barcode formats
     lines = []
@@ -14,6 +14,7 @@ def main():
                 continue
         if not line.strip(): # detect empty line
             continue
+        line = line.lower()
         # print(ParseLine(line)) for debugging
         lines.append(ParseLineSN(line))
         modellines.append(ParseLineModel(line))
@@ -39,40 +40,40 @@ def main():
 
 
 def ParseLineModel(line):
-    if (line.startswith('NO SERIAL NUMBER 11 E')):
+    if (line.startswith('NO SERIAL NUMBER 11 E'.lower())):
         return 'Yoga 11e'
-    if (line.startswith('C00') or line.startswith('NO ASSET TAG') or line.startswith('NO SERIAL')):
+    if (line.startswith('C00'.lower()) or line.startswith('NO ASSET TAG'.lower()) or line.startswith('NO SERIAL'.lower())):
         return 'n/a'
-    if (line.startswith('http://s')):
+    if (line.startswith('http://s'.lower())):
         return 'N22-20'
-    if (line.startswith('MTM') or line.startswith('LR0')):
+    if (line.startswith('MTM'.lower()) or line.startswith('LR0'.lower())):
         return 'N23'
-    if (line.startswith('1S20')):
+    if (line.startswith('1S20'.lower())):
         return 'Yoga 11e'
     raise Exception('model: ' + line + 'is an unknown format')
 
 def ParseLineSN(line):
-    sampleLRline = 'LR0AURANLRNXB822600D'
-    sampleCline = 'C000528173'
-    notagline = 'NO ASSET TAG'
+    sampleLRline = 'LR0AURANLRNXB822600D'.lower()
+    sampleCline = 'C000528173'.lower()
+    notagline = 'NO ASSET TAG'.lower()
     line = line.strip()
-    if (line.startswith('LR') and (len(line) == len(sampleLRline))):  #easy - serial like LRxxxx
+    if (line.startswith('LR'.lower()) and (len(line) == len(sampleLRline))):  #easy - serial like LRxxxx
         return line
-    if (line.startswith('1S2') and (len(line) == len(sampleLRline))):  #yoga 11E
+    if (line.startswith('1S2'.lower()) and (len(line) == len(sampleLRline))):  #yoga 11E
         return line
-    if ((line.startswith('C00') and len(line) == len(sampleCline)) or line == notagline):   #easy - asset tag starting with C
+    if ((line.startswith('C00'.lower()) and len(line) == len(sampleCline)) or line == notagline):   #easy - asset tag starting with C
         return line
-    if (line.startswith('NO SERIAL NUMBER')):
+    if (line.startswith('NO SERIAL NUMBER'.lower())):
         return line
-    if ('S/N:' in line and 'MO:' in line and 'MTM:' in line):
-        snpos = line.index('S/N:') + 3
-        mopos = line.index('MO:') + 3
-        moend = line.index('MTM:')
+    if ('S/N:'.lower() in line and 'MO:'.lower() in line and 'MTM:'.lower() in line):
+        snpos = line.index('S/N:'.lower()) + 3
+        mopos = line.index('MO:'.lower()) + 3
+        moend = line.index('MTM:'.lower())
         return (line[snpos:mopos-3].strip() + line[mopos:moend].strip()).replace(':','').replace(';','').replace(',','')
-    if ('SN,' in line and 'MO,' in line and 'MTM,' in line):
-        snpos = line.index('SN,') + 3
-        mopos = line.index('MO,') + 3
+    if ('SN,'.lower() in line and 'MO,'.lower() in line and 'MTM,'.lower() in line):
+        snpos = line.index('SN,'.lower()) + 3
+        mopos = line.index('MO,'.lower()) + 3
         return (line[snpos:mopos-3].strip() + line[mopos:].strip()).replace(':','').replace(';','').replace(',','')
-    raise Exception(line + 'is an unknown format')
+    raise Exception(line + ' is an unknown format')
 
 main()
